@@ -1,7 +1,7 @@
 .vscode
 .DS_Store
 .ipynb_checkpoints
-./DOCUMENT.md
+DOCUMENT.md
 
 # User-specific stuff
 .idea/**/workspace.xml

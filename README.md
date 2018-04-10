@@ -1,1 +1,2 @@
 # Self-Driving-Taxi-2
+My second implementation of the autonomous agent but with various improvements learned since my first implementation with the main one being prioritised experience replay discussed in Google Deepmind's 2016 paper.

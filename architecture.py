@@ -10,6 +10,7 @@ from torch.autograd import Variable
 
 
 class NeuralNetworkArchitecture(nn.Module):
+
     def __init__(self, input_nodes, output_nodes):
         """ Defines the structure of our neural network on initialisation.
 
@@ -27,3 +28,16 @@ class NeuralNetworkArchitecture(nn.Module):
 
         self.full_connection_1 = nn.Linear(input_nodes, 30)
         self.full_connection_2 = nn.Linear(30, output_nodes)
+
+    def forward_propagate(self, sensor_data):
+        """ Gives us a list of Q-values from the current state of the car
+
+            :param sensor_data: The current state of the veichle in the form of sensor data
+            :type sensor_data: list
+
+            :return: The expected values of each possible action
+            :rtype: list
+        """
+        hidden_node_vals = f.relu(self.full_connection_1(sensor_data))
+        q_values = self.full_connection_2(hidden_node_vals)
+        return q_values

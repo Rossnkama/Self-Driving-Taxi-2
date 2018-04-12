@@ -1,7 +1,7 @@
 # Experience replay
 
 
-class PrioritisedExperienceReplay(object):
+class DQNPrioritisedReplay(object):
 
     def __init__(self, capacity):
         """ Initialises the sliding window capacity and memory data struct
@@ -24,3 +24,6 @@ class PrioritisedExperienceReplay(object):
         # Keep no of transitions in sliding window constant
         if len(self.memory) > self.capacity:
             del self.memory[0]
+
+    def sample(self, batch_size):
+

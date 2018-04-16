@@ -6,19 +6,9 @@ from prioritised_replay import DQNPrioritisedReplay
 import torch.nn.functional as f
 
 
-def get_loss(real, expected):
-    """ Get's us the TD-Error
-
-        :param real: Our real value experienced
-        :param expected: Our network's hypothesised value
-        :return: The TD-Error (In this case)
-    """
-    return f.smooth_l1_loss(real, expected)
-
-
 class DeepQNetwork(object):
 
-    def __init__(self, input_size, output_size):
+    def __init__(self, input_size, output_size, gamma):
         """ The Q-Learning of our ANN
 
             :param input_size: How many input's will the ANN take
@@ -50,7 +40,36 @@ class DeepQNetwork(object):
         outputs = self.model(batch_state).gather(1, batch_action.unsqueeze(1)).squeeze(1)
         next_outputs = self.model(batch_next_state).detach().max(1)[0]
         target = self.gamma * next_outputs + batch_reward
-        td_loss = get_loss(outputs, target)
+
+        global td_loss
+        td_loss = f.smooth_l1_loss(outputs, target)
+
         td_loss.backward(retain_variables=True)
         self.optimiser.step()
 
+    def update(self, reward, new_signal):
+        new_state = torch.Tensor(new_signal).float().unsqueeze(0)
+        self.memory.push((
+            self.last_state,
+            new_state,
+            torch.LongTensor([int(self.last_action)]),
+            torch.Tensor([self.last_reward]),
+            td_loss
+        ))
+
+        action = self.select_action(new_state)
+
+        if len(self.memory.memory) > 100:
+            batch_state, batch_next_state, batch_action, batch_reward, batch_loss = self.memory.sample(100)
+            self.learn(batch_state, batch_next_state, batch_reward, batch_action)
+
+        self.last_action = action
+        self.last_state = new_state
+        self.last_reward = reward
+
+        self.reward_window.append(reward)
+
+        # Keeping the window of a fixed size
+        if len(self.reward_window) > 1000:
+            del self.reward_window[0]
+        return action

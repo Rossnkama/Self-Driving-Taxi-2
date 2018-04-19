@@ -4,6 +4,6 @@ My second implementation of the autonomous agent but with various improvements l
 
 ## Want to understand how I implemented ideas discussed in the paper above?
 
-Make your way [here](./DOCUMENTATION.md).
+Make your way [here](./EXPLANATION.md).
 
 ## How to build

@@ -27,7 +27,8 @@ class NeuralNetworkArchitecture(nn.Module):
         self.output_nodes = output_nodes
 
         self.full_connection_1 = nn.Linear(input_nodes, 30)
-        self.full_connection_2 = nn.Linear(30, output_nodes)
+        self.full_connection_2 = nn.Linear(30, 10)
+
 
     def forward_propagate(self, sensor_data):
         """ Gives us a list of Q-values from the current state of the car

@@ -21,14 +21,17 @@ class DQNPrioritisedReplay(object):
         self.epsilon = 0.2
 
     def push(self, transition):
-        """ Pushes a new markov process transition + TD-Error to the replay memory window
+        """ Pushes a new markov process transition + TD-Error to the replay memory window:
+            An object in the binary heap replay memory will be shaped as: ([transition], TDE)
 
             :param transition: A single markov process transition + TD-Error
             :type transition: list
         """
         # Pushing transition and said transition's temporal difference to memory as a tuple...
-        # ([transition], TDE, priority)
-        heapq.heappush(self.memory, (transition[:len(transition)-1], abs(transition[-1]), (abs(transition[-1]) + self.epsilon ** self.alpha)))
+        def heappush(h, item, key=lambda x: x[-1]):
+            heapq.heappush(h, (key(item), item))
+        heappush(self.memory, transition)
+
         # Keep no of transitions in sliding window constant
         if len(self.memory) > self.capacity:
             del self.memory[0]

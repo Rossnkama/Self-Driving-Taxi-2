@@ -1,6 +1,5 @@
 # Experience replay
 import heapq
-import operator
 
 
 class DQNPrioritisedReplay(object):
@@ -30,6 +29,7 @@ class DQNPrioritisedReplay(object):
         # Pushing transition and said transition's temporal difference to memory as a tuple...
         def heappush(h, item, key=lambda x: x[-1]):
             heapq.heappush(h, (key(item), item))
+
         heappush(self.memory, transition)
 
         # Keep no of transitions in sliding window constant
@@ -37,4 +37,3 @@ class DQNPrioritisedReplay(object):
             del self.memory[0]
 
     def sample(self, batch_size):
-        pass

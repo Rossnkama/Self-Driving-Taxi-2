@@ -25,15 +25,13 @@ class DQNPrioritisedReplay(object):
 
             :param transition: A single markov process transition + TD-Error
             :type transition: list
+
+            :return: None
         """
-        # Pushing transition and said transition's temporal difference to memory as a tuple...
-        def heappush(h, item, key=lambda x: x[-1]):
-            heapq.heappush(h, (key(item), item))
 
-        heappush(self.memory, transition)
-
-        # Keep no of transitions in sliding window constant
+        # Keeping number of transitions in sliding window constant at 100
         if len(self.memory) > self.capacity:
-            del self.memory[0]
+            del self.memory[-1]
 
     def sample(self, batch_size):
+        pass
